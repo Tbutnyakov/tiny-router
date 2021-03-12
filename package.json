@@ -1,0 +1,41 @@
+{
+  "name": "tiny-router",
+  "version": "0.1.0",
+  "description": "A simple file-based router for better code spliting ",
+  "main": "/dist/index.js",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "jest -c jest.config.js",
+    "test:watch": "jest --watch -c jest.config.js",
+    "test:coverage": "jest --coverage -c jest.config.js",
+    "lint:js": "eslint . --ext .js,.ts,",
+    "lint:js:fix": "eslint . --fix --ext .js,.ts,",
+    "doc": "typedoc",
+    "check": "npm run lint:js && npm run test",
+    "prepare": "npm run build && npm run doc",
+    "prettier": "prettier --ignore-path .gitignore --write ./**/*.{js,ts}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tbutnyakov/tiny-router.git"
+  },
+  "keywords": [
+    "router"
+  ],
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "jest": "^26.6.3",
+    "prettier": "2.2.1",
+    "ts-jest": "^26.5.2",
+    "typedoc": "^0.20.30",
+    "typedoc-plugin-markdown": "^3.6.0",
+    "typescript": "^4.2.2"
+  },
+  "author": "Tbutnyakov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tbutnyakov/tiny-router/issues"
+  },
+  "homepage": "https://github.com/Tbutnyakov/tiny-router#readme"
+}
