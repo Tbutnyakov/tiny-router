@@ -1,0 +1,1 @@
+export { TinyRouterPlugin } from './TinyRouterPlugin';
