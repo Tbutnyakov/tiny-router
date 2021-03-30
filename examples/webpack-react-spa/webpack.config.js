@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const { TinyRouterPlugin } = require('../../dist/webpack');
+const { makeTinyWebpackRouter } = require('../../dist/webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -27,16 +27,19 @@ const extensions = [
   '.html',
 ];
 
+const { entries, definedRouterData } = makeTinyWebpackRouter();
+
 const CLIENT_ENV = {
   'process.browser': true,
   'process.env.isDev': dev,
   'process.env.NODE_ENV': JSON.stringify(mode),
+  ...definedRouterData,
 };
 
 const distFolder = path.resolve(__dirname, 'dist');
 
 module.exports = {
-  entry: ['./src/client.tsx'],
+  entry: { main: './src/client.tsx', ...entries },
   output: {
     filename: dev ? '[name].dev.js' : '[name].[chunkhash].js',
     path: distFolder,
@@ -77,7 +80,6 @@ module.exports = {
   },
   mode,
   plugins: [
-    new TinyRouterPlugin({ rootDir: path.resolve(__dirname, 'src/') }),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin(CLIENT_ENV),
     analyze && new BundleAnalyzerPlugin(),
