@@ -35,7 +35,7 @@ interface TRActiveRouteRecord extends TRLocation {
 type TRRouteMiddlewareProps = {
   prevRoute?: TRActiveRouteRecord;
   nextRoute: TRActiveRouteRecord;
-  redirect: () => boolean;
+  redirect: TRRouterReplace;
   next: () => boolean;
 };
 
@@ -71,3 +71,24 @@ interface TRRouteModuleHandler extends TRRouteModuleDataWithParser {
 }
 
 type TRHistoryPushProps = [{ [key: string]: any }, string, string];
+
+type TRRouterPush = (path: string) => void;
+type TRRouterReplace = (path: string) => void;
+
+type TROnActiveRouteUpdateHandler = (TRActiveRouteRecord) => any;
+
+type TRReactContextState = {
+  activeRouteRecord: TRActiveRouteRecord;
+  push: TRRouterPush;
+  replace: TRRouterReplace;
+};
+
+type RouterProviderProps = {
+  children: React.ReactNode;
+};
+
+type TRReactLinkProps = {
+  children: React.ReactNode;
+  to: string;
+  href: string;
+};

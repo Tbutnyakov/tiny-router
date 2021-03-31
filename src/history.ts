@@ -26,5 +26,3 @@ export const getBrowserHistoryProvider = () => {
     },
   };
 };
-
-export const browserHistoryProvider = getBrowserHistoryProvider();

@@ -1,5 +1,6 @@
 import PathToRegex from 'path-to-regex';
 import { parse, stringify } from 'query-string';
+import { getBrowserHistoryProvider } from './history';
 
 export const stringifyQuery = stringify;
 export const parseQuery = (str: string) => ({ ...parse(str) });
@@ -65,11 +66,15 @@ export const findRouteHandler = (
   routesHandlers.find(handler => Object.is(handler.name, mathedRouteData.name));
 
 export const pipeMiddlewares = async (
+  replace: TRRouterReplace,
   nextRoute: TRActiveRouteRecord,
   prevRoute: TRActiveRouteRecord,
   middlewares: TRRouteMiddleware[]
 ) => {
-  const redirect = () => false;
+  const redirect = (path: string) => {
+    replace(path);
+    return false;
+  };
   const next = () => true;
   for (const middleware of middlewares || []) {
     const result = await middleware({ prevRoute, nextRoute, redirect, next });
@@ -79,20 +84,35 @@ export const pipeMiddlewares = async (
   return true;
 };
 
-export const makeRouterCore = (routesRawData: TRRouteRawModuleData[] = []) => {
+export const makeRouterCore = (
+  routesRawData: TRRouteRawModuleData[] = [],
+  historyProvider = getBrowserHistoryProvider()
+) => {
   let mathedRoutesData: TRRouteModuleDataWithParser[] = [];
   let routesHandlers: TRRouteModuleHandler[] = [];
-
   let activeRouteRecord = (undefined as unknown) as TRActiveRouteRecord;
+
+  let routeUpdateListener: TROnActiveRouteUpdateHandler = () => undefined;
+
+  const onActiveRouteUpdate = (fn: TROnActiveRouteUpdateHandler) => {
+    routeUpdateListener = fn;
+    return () => {
+      routeUpdateListener = () => undefined;
+    };
+  };
 
   const setActiveRoute = (newRecord: TRActiveRouteRecord) => {
     activeRouteRecord = newRecord;
+    routeUpdateListener(activeRouteRecord);
   };
 
-  const handleUpdateActiveRoute = async (
-    previousRoute: TRActiveRouteRecord | undefined,
-    fullPath: string
-  ) => {
+  const push = (fullPath: string) =>
+    historyProvider.pushState({}, '', fullPath);
+
+  const replace = (fullPath: string) =>
+    historyProvider.replaceState({}, '', fullPath);
+
+  const updateActiveRoute = async (fullPath: string) => {
     const targetLocation = makeRouteLocation(fullPath);
     const matchedRouteData = findMatchedRouteData(
       mathedRoutesData,
@@ -107,8 +127,6 @@ export const makeRouterCore = (routesRawData: TRRouteRawModuleData[] = []) => {
     );
     if (!newRouteHandlerData) return false;
 
-    console.log(previousRoute);
-
     const newActiveRouteRecord = createActiveRouteObject(
       newRouteHandlerData,
       targetLocation
@@ -116,6 +134,7 @@ export const makeRouterCore = (routesRawData: TRRouteRawModuleData[] = []) => {
 
     if (
       !pipeMiddlewares(
+        replace,
         newActiveRouteRecord,
         activeRouteRecord,
         newRouteHandlerData.page.middlewares as TRRouteMiddleware[]
@@ -149,9 +168,10 @@ export const makeRouterCore = (routesRawData: TRRouteRawModuleData[] = []) => {
   makeMathToRoutesData();
 
   return {
-    handleUpdateActiveRoute,
-    setActiveRoute,
+    historyProvider,
+    push,
+    replace,
+    onActiveRouteUpdate,
+    updateActiveRoute,
   };
 };
-
-export const core = makeRouterCore();
