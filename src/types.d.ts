@@ -75,20 +75,30 @@ type TRHistoryPushProps = [{ [key: string]: any }, string, string];
 type TRRouterPush = (path: string) => void;
 type TRRouterReplace = (path: string) => void;
 
-type TROnActiveRouteUpdateHandler = (TRActiveRouteRecord) => any;
+type TROnActiveRouteUpdateHandler = (
+  TRActiveRouteRecord,
+  TRRouteModuleHandler
+) => any;
 
 type TRReactContextState = {
-  activeRouteRecord: TRActiveRouteRecord;
+  historyProvider: any;
+  pageData: TRPageData<any>;
+  routeRecord: TRActiveRouteRecord;
   push: TRRouterPush;
   replace: TRRouterReplace;
 };
 
-type RouterProviderProps = {
+type TRReactProviderProps = {
   children: React.ReactNode;
+};
+
+type TRReactSlotProps = {
+  name: string;
 };
 
 type TRReactLinkProps = {
   children: React.ReactNode;
   to: string;
   href: string;
+  replace: boolean;
 };

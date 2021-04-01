@@ -14,7 +14,7 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "paths": {
       "~/*": ["./src/*"],
-      "tiny-router": ["../../dist/*"]
+      "tiny-router/*": ["../../dist/*"]
     }
   },
   "include": ["src/**/*"]

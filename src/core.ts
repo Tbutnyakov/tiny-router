@@ -101,9 +101,12 @@ export const makeRouterCore = (
     };
   };
 
-  const setActiveRoute = (newRecord: TRActiveRouteRecord) => {
+  const setActiveRoute = (
+    newRecord: TRActiveRouteRecord,
+    pageData: TRPageData<any>
+  ) => {
     activeRouteRecord = newRecord;
-    routeUpdateListener(activeRouteRecord);
+    routeUpdateListener(activeRouteRecord, pageData);
   };
 
   const push = (fullPath: string) =>
@@ -142,7 +145,7 @@ export const makeRouterCore = (
     )
       return false;
 
-    setActiveRoute(activeRouteRecord);
+    setActiveRoute(activeRouteRecord, newRouteHandlerData.page);
     return true;
   };
 
