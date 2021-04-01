@@ -1,7 +1,9 @@
+import React from 'react';
 import { useRouterContext } from './useRouterContext';
 
 export const RouterSlot = ({ name }: TRReactSlotProps) => {
   const { pageData } = useRouterContext();
-  const { components } = pageData;
-  return components.find(data => data.slot === name)?.component || null;
+  const targetComponent = pageData.components.find(data => data.slot === name)
+    ?.component;
+  return <>{targetComponent || null} </>;
 };
