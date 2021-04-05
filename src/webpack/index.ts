@@ -6,7 +6,7 @@ export const makeWebpackEntries = (routesBlueprints: TRBuildRouteBlueprint[]) =>
   }, {});
 
 export const makeDefinedRouterData = (data: any = {}) => ({
-  'process.env.TINY_ROUTER_DATA': JSON.stringify(data),
+  'process.env.TINY_ROUTER_DATA': JSON.stringify(JSON.stringify(data)),
 });
 
 export const makeTinyWebpackRouter = (
