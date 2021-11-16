@@ -1,1 +1,1 @@
-console.log('cire');
+export { buildRouter } from './builder';
