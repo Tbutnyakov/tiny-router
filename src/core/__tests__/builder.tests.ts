@@ -1,37 +1,5 @@
 import { buildRouter } from '../builder';
-
-const TEST_BLUEPRINTS = [
-  {
-    path: '/',
-    components: [
-      {
-        slot: 'default',
-        handler: () => 'default-result',
-      },
-      {
-        slot: 'top',
-        handler: () => 'top-result',
-      },
-    ],
-  },
-  {
-    path: '/test/:testId',
-    components: [
-      {
-        slot: 'default',
-        handler: () => 'default-result',
-      },
-      {
-        slot: 'top',
-        handler: () => 'top-result',
-      },
-    ],
-  },
-];
-
-const TEST_SCHEME = {
-  blueprints: TEST_BLUEPRINTS,
-};
+import { TEST_SCHEME } from './mocks';
 
 describe('builder tests', () => {
   const testRoutes = buildRouter(TEST_SCHEME);
